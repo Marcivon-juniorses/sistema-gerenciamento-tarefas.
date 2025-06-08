@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void limparTerminal() 
 {
@@ -34,9 +35,17 @@ void limpaBuffer()
     while((i = getchar())!= '\n' && i != EOF);
 }
 
+void eliminaTarefa(char **matriz, int linhaE, int linhas)
+{
+    for(int i=linhaE - 1; i<linhas - 1; i++)
+    {
+        strcpy(matriz[i], matriz[i+1]);
+    }
+}
+
 int main()
 {
-    int linha, coluna, tarefaslistadas;
+    int linha, coluna, tarefaslistadas, tarefa;
     char **lista, op[2];
     tarefaslistadas = 0;
     linha = 1;
@@ -49,26 +58,42 @@ int main()
     while(op[0] != '0')
     {
         printf("O que deseja fazer\nDigite:\n");
-        printf("1.Cadastrar nova tarefa\n2.Mostrar tarefas\n3.Limpar o terminal\n0.Para fechar o programa\n--> ");
+        printf("1.Cadastrar nova tarefa\n2.Mostrar tarefas\n3.Limpar o terminal\n4.Para eliminar uma tarefa\n0.Para fechar o programa\n--> ");
         scanf("%c", op);
         limpaBuffer();
         printf("-----------------------------------------------------------------------------\n");
+
         if(op[0] == '1')
         {
-            aumentaLinha(lista, linha, coluna);
-            linha++;
             printf("Digite a %d tarefa\n--> ", tarefaslistadas + 1);
             fgets(lista[tarefaslistadas], 100, stdin);
             tarefaslistadas++;
             limpaBuffer();
         }
+
         else if(op[0] == '2')
         {
             mostraLista(lista, tarefaslistadas);
         }
+
         else if(op[0] == '3')
         {
             limparTerminal();
+        }
+
+        else if(op[0] == '4')
+        {
+            printf("Qual tarefa quer eliminar: ");
+            scanf("%d", &tarefa);
+            eliminaTarefa(lista, tarefa, linha);
+            tarefaslistadas--;
+            mostraLista(lista, tarefaslistadas);
+        }
+
+        if(tarefaslistadas == linha)
+        {
+            aumentaLinha(lista, linha, coluna);
+            linha++;
         }
         printf("-----------------------------------------------------------------------------\n");
     }
